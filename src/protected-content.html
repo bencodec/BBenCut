@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" class="alx-dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Protected Content</title>
+    <script>
+      var DATA = __DATA__;
+
+      function sendResult(payload) {
+        var msg = JSON.stringify(payload);
+        if (
+          window.webkit &&
+          window.webkit.messageHandlers &&
+          window.webkit.messageHandlers.live
+        ) {
+          window.webkit.messageHandlers.live.postMessage({
+            method: "close_and_send",
+            params: [msg],
+          });
+        } else if (window.chrome && window.chrome.webview) {
+          window.chrome.webview.postMessage({
+            method: "close_and_send",
+            params: [msg],
+          });
+        }
+      }
+
+      function onOk() {
+        sendResult({ action: "ok" });
+      }
+
+      window.onload = function () {
+        document.getElementById("clip-name").textContent =
+          DATA.clipName || "(untitled)";
+      };
+    </script>
+    <style>
+      /* __INLINE_CSS__ */
+      :root {
+        --bb-1: #815ef2;
+        --bb-2: #565659;
+        --bb-3: #1eaf81;
+        --bb-4: #ffffff;
+        --bb-5: #929292;
+
+        --c-highlight--primary: var(--bb-3);
+        --c-highlight--secondary: var(--bb-1);
+      }
+
+      html,
+      body {
+        height: 100vh;
+        overflow: hidden;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+      }
+      .content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1em;
+      }
+      p {
+        margin: 0 0 0.75em 0;
+        line-height: 1.4;
+      }
+      .clip-name {
+        font-weight: 600;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content alx-group alx-vertical">
+      <div
+        class="alx-group alx-vertical alx-panel alx-p-border"
+        style="flex: 1"
+      >
+        <p><strong>BBenCut can't read this clip's audio.</strong></p>
+        <p>
+          To use it with BBenCut, freeze and flatten the track (or bounce the
+          clip), then try again.
+        </p>
+      </div>
+      <div
+        class="alx-group alx-horizontal footer"
+        style="align-items: center; justify-content: flex-end"
+      >
+        <button
+          id="btn-ok"
+          class="alx-button alx-primary alx-action alx-no-flex"
+          onclick="onOk()"
+          style="min-width: 72px"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
