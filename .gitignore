@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+*.env
+
+ableton-extensions-cli-1.0.0-beta.0.tgz
+ableton-extensions-sdk-1.0.0-beta.0.tgz

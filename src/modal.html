@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en" class="alx-dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BBenCut</title>
+    <script>
+      var DATA = __DATA__;
+
+      function sendResult(payload) {
+        var msg = JSON.stringify(payload);
+        if (
+          window.webkit &&
+          window.webkit.messageHandlers &&
+          window.webkit.messageHandlers.live
+        ) {
+          window.webkit.messageHandlers.live.postMessage({
+            method: "close_and_send",
+            params: [msg],
+          });
+        } else if (window.chrome && window.chrome.webview) {
+          window.chrome.webview.postMessage({
+            method: "close_and_send",
+            params: [msg],
+          });
+        }
+      }
+
+      function onCancel() {
+        sendResult({ action: "cancel" });
+      }
+
+      function onApply() {
+        var procType = el("proc-type").value;
+        var params = {};
+        var fields = document.querySelectorAll(
+          "#params-" + procType + " input[data-param]",
+        );
+        fields.forEach(function (f) {
+          params[f.getAttribute("data-param")] = parseFloat(f.value) || 0;
+        });
+        sendResult({
+          action: "apply",
+          config: {
+            totalBars: parseFloat(el("total-bars").value) || DATA.totalBars,
+            loopBars: parseFloat(el("loop-bars").value) || DATA.loopBars,
+            procType: procType,
+            params: params,
+          },
+        });
+      }
+
+      function el(id) {
+        return document.getElementById(id);
+      }
+
+      function syncSlider(input) {
+        var decimals = parseInt(input.getAttribute("data-decimals") || "2");
+        input.nextElementSibling.textContent = parseFloat(input.value).toFixed(
+          decimals,
+        );
+      }
+
+      function onProcChange() {
+        var procType = el("proc-type").value;
+        document.querySelectorAll(".proc-params").forEach(function (div) {
+          div.style.display = div.id === "params-" + procType ? "" : "none";
+        });
+      }
+
+      window.onload = function () {
+        el("total-bars").value = DATA.totalBars;
+        el("loop-bars").value = DATA.loopBars;
+        el("tempo-display").textContent = DATA.tempo.toFixed(1) + " BPM";
+        el("clip-name-display").textContent = DATA.clipName || "(untitled)";
+        el("proc-type").addEventListener("change", onProcChange);
+        onProcChange();
+      };
+    </script>
+    <style>
+      /* __INLINE_CSS__ */
+
+      :root {
+        --bb-1: #815ef2;
+        --bb-2: #565659;
+        --bb-3: #1eaf81;
+        --bb-4: #ffffff;
+        --bb-5: #929292;
+
+        --c-highlight--primary: var(--bb-3);
+        --c-highlight--secondary: var(--bb-1);
+      }
+
+      html,
+      body {
+        height: 100vh;
+        overflow: hidden;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+      }
+      .content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1em;
+        padding-bottom: 0.5em;
+      }
+      .attribution {
+        font-size: 0.9em;
+        color: var(--c-text-secondary);
+        line-height: 1.4;
+      }
+      .slider-val {
+        width: 3em;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .field-label {
+        flex: none !important;
+        width: 9em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content alx-group alx-vertical">
+      <div
+        class="alx-lcd alx-group alx-vertical"
+        style="flex: none; min-height: 245px"
+      >
+        <div style="margin-bottom: 1em">
+          <!-- __INLINE_SVG__ -->
+        </div>
+        <select id="proc-type" class="alx-select alx-secondary">
+          <option value="BBCutProc11">BBCutProc11 (Classic)</option>
+          <option value="ChooseCutProc">ChooseCutProc</option>
+          <option value="ChooseBlockProc">ChooseBlockProc</option>
+          <option value="WarpCutProc1">WarpCutProc1</option>
+          <option value="SQPusher1">SQPusher1</option>
+          <option value="SQPusher2">SQPusher2 (Data)</option>
+          <option value="CageCut">CageCut (Cage)</option>
+          <option value="TimelineCut">TimelineCut</option>
+          <option value="BBCPPermute">BBCPPermute</option>
+          <option value="ThrashCutProc1">ThrashCutProc1</option>
+        </select>
+        <hr class="alx-hr" />
+        <!-- BBCutProc11 -->
+        <div id="params-BBCutProc11" class="proc-params alx-group alx-vertical">
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Subdivisions</span>
+            <input
+              type="number"
+              class="alx-input alx-secondary alx-no-flex"
+              data-param="sdiv"
+              value="8"
+              step="1"
+              min="2"
+              max="32"
+            />
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Repeats Chance</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="repeatschance"
+              value="0.2"
+              step="0.05"
+              min="0"
+              max="1"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.20</span>
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Repeats Speed</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="repeatsspeed"
+              value="2"
+              step="1"
+              min="1"
+              max="8"
+              data-decimals="0"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">2</span>
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Repeats Area</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="repeatsarea"
+              value="0.5"
+              step="0.05"
+              min="0"
+              max="1"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.50</span>
+          </label>
+          <div
+            class="alx-group alx-horizontal"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Repeats</span>
+            <div class="alx-group alx-horizontal">
+              <input
+                type="number"
+                class="alx-input alx-no-flex alx-secondary"
+                data-param="numrepeatsMin"
+                value="1"
+                step="1"
+                min="1"
+                max="8"
+                style="width: 4em"
+              />
+              <span class="alx-no-flex">–</span>
+              <input
+                type="number"
+                class="alx-input alx-no-flex alx-secondary"
+                data-param="numrepeatsMax"
+                value="2"
+                step="1"
+                min="1"
+                max="8"
+                style="width: 4em"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- ChooseCutProc -->
+        <div
+          id="params-ChooseCutProc"
+          class="proc-params alx-group alx-vertical alx-and-margin"
+        >
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Roll chance</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="rollchance"
+              value="0.1"
+              step="0.05"
+              min="0"
+              max="1"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.10</span>
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Roll allowed</span>
+            <input
+              type="number"
+              class="alx-input alx-secondary alx-no-flex"
+              data-param="rollallowed"
+              value="2.0"
+              step="0.5"
+              min="0.5"
+              max="8"
+            />
+            <span>beats</span>
+          </label>
+        </div>
+
+        <!-- ChooseBlockProc -->
+        <div
+          id="params-ChooseBlockProc"
+          class="proc-params alx-group alx-vertical alx-and-margin"
+        >
+          <span style="color: var(--c-text-secondary)"
+            >Uses default weighted block sizes.</span
+          >
+        </div>
+
+        <!-- WarpCutProc1 -->
+        <div
+          id="params-WarpCutProc1"
+          class="proc-params alx-group alx-vertical alx-and-margin"
+        >
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Straight chance</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="straightchance"
+              value="0.5"
+              step="0.05"
+              min="0"
+              max="1"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.50</span>
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Arithmetic chance</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="arithmeticchance"
+              value="0.7"
+              step="0.05"
+              min="0"
+              max="1"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.70</span>
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Accel chance</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="accelchance"
+              value="0.6"
+              step="0.05"
+              min="0"
+              max="1"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.60</span>
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Accel factor</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="accel"
+              value="0.9"
+              step="0.01"
+              min="0.1"
+              max="0.99"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.90</span>
+          </label>
+        </div>
+
+        <!-- SQPusher1 -->
+        <div
+          id="params-SQPusher1"
+          class="proc-params alx-group alx-vertical alx-and-margin"
+        >
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Activity</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="activity"
+              value="0.1"
+              step="0.05"
+              min="0"
+              max="1"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.10</span>
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Fill frequency</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="fillfreq"
+              value="4"
+              step="1"
+              min="1"
+              max="16"
+              data-decimals="0"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">4</span>
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Fill scramble</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="fillscramble"
+              value="0.0"
+              step="0.05"
+              min="0"
+              max="1"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.00</span>
+          </label>
+        </div>
+
+        <!-- CageCut -->
+        <div
+          id="params-CageCut"
+          class="proc-params alx-group alx-vertical alx-and-margin"
+        >
+          <span style="color: var(--c-text-secondary)"
+            >Fractal form [0.5, 0.25, 0.25].</span
+          >
+        </div>
+
+        <!-- TimelineCut -->
+        <div
+          id="params-TimelineCut"
+          class="proc-params alx-group alx-vertical alx-and-margin"
+        >
+          <span style="color: var(--c-text-secondary)"
+            >3+3+2 clave pattern.</span
+          >
+        </div>
+
+        <!-- BBCPPermute -->
+        <div
+          id="params-BBCPPermute"
+          class="proc-params alx-group alx-vertical alx-and-margin"
+        >
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Subdivisions</span>
+            <input
+              type="number"
+              class="alx-input alx-secondary alx-no-flex"
+              data-param="subdiv"
+              value="8"
+              step="1"
+              min="2"
+              max="32"
+            />
+          </label>
+        </div>
+
+        <!-- SQPusher2 -->
+        <div
+          id="params-SQPusher2"
+          class="proc-params alx-group alx-vertical alx-and-margin"
+        >
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Scramble</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="scramble"
+              value="0.0"
+              step="0.05"
+              min="0"
+              max="1"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.00</span>
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Quantise</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="quant"
+              value="0.0"
+              step="0.0625"
+              min="0"
+              max="0.5"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.00</span>
+          </label>
+        </div>
+
+        <!-- ThrashCutProc1 -->
+        <div
+          id="params-ThrashCutProc1"
+          class="proc-params alx-group alx-vertical alx-and-margin"
+        >
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Kick offset</span>
+            <input
+              type="number"
+              class="alx-input alx-secondary alx-no-flex"
+              data-param="kickoffset"
+              value="0.0"
+              step="0.125"
+              min="0"
+              max="1"
+            />
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Snare offset</span>
+            <input
+              type="number"
+              class="alx-input alx-secondary alx-no-flex"
+              data-param="snareoffset"
+              value="0.125"
+              step="0.125"
+              min="0"
+              max="1"
+            />
+          </label>
+          <label
+            class="alx-label alx-input-group"
+            style="color: var(--c-highlight--secondary)"
+          >
+            <span class="field-label">Stop chance</span>
+            <input
+              type="range"
+              class="alx-input alx-secondary"
+              data-param="stopchance"
+              value="0.125"
+              step="0.05"
+              min="0"
+              max="1"
+              oninput="syncSlider(this)"
+            />
+            <span class="slider-val">0.13</span>
+          </label>
+        </div>
+      </div>
+      <!-- .alx-lcd -->
+      <div class="alx-panel alx-group alx-vertical">
+        <div class="alx-group alx-horizontal">
+          <span class="field-label">Selected</span>
+          <span
+            id="clip-name-display"
+            style="
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            "
+          ></span>
+        </div>
+        <div class="alx-group alx-horizontal">
+          <span class="field-label">Tempo</span>
+          <span id="tempo-display"></span>
+        </div>
+        <label class="alx-label alx-input-group">
+          <span class="field-label">Total length</span>
+          <input
+            type="number"
+            class="alx-input alx-no-flex"
+            id="total-bars"
+            step="1"
+            min="1"
+          />
+          <span>bars</span>
+        </label>
+        <label class="alx-label alx-input-group">
+          <span class="field-label">Loop length</span>
+          <input
+            type="number"
+            class="alx-input alx-no-flex"
+            id="loop-bars"
+            step="0.5"
+            min="0.5"
+          />
+          <span>bars</span>
+        </label>
+      </div>
+      <div class="alx-group alx-horizontal footer" style="align-items: center">
+        <p class="attribution">
+          Original
+          <a
+            class="alx-link"
+            href="https://composerprogrammer.com/bbcut2.html"
+            target="_blank"
+            >BBCut Library</a
+          >
+          by Nic Collins
+        </p>
+        <div class="alx-group alx-horizontal alx-no-flex">
+          <button
+            id="btn-cancel"
+            class="alx-button alx-secondary alx-action alx-no-flex"
+            onclick="onCancel()"
+            style="min-width: 72px"
+          >
+            Cancel
+          </button>
+          <button
+            id="btn-apply"
+            class="alx-button alx-primary alx-action alx-no-flex"
+            onclick="onApply()"
+            style="min-width: 72px"
+          >
+            Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

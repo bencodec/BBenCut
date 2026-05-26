@@ -1,0 +1,24 @@
+{
+  "name": "BBenCut",
+  "displayName": "BBenCut",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "dist/extension.js",
+  "scripts": {
+    "start": "extensions-cli run --live '/Applications/Ableton Live 12 Beta.app'",
+    "build": "tsc --noEmit && node esbuild.js --production",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@ableton-extensions/sdk": "file:./ableton-extensions-sdk-1.0.0-beta.0.tgz",
+    "@audio/decode-aiff": "^1.1.1",
+    "audio-decode": "^3.9.0"
+  },
+  "devDependencies": {
+    "@ableton-extensions/cli": "file:./ableton-extensions-cli-1.0.0-beta.0.tgz",
+    "@types/node": "^25.6.0",
+    "esbuild": "^0.25.10",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

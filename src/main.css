@@ -1,0 +1,845 @@
+/* 1. Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+*:not(dialog) {
+  margin: 0;
+}
+
+/* 3. Enable keyword animations */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+body {
+  /* 4. Increase line-height */
+  line-height: 1.5;
+  /* 5. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 6. Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 7. Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* 8. Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* 9. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+/*
+  10. Create a root stacking context
+*/
+#root,
+#__next {
+  isolation: isolate;
+}
+
+/* https://www.joshwcomeau.com/css/custom-css-reset/
+
+  "Feel free to copy/paste this into your own projects!
+   It's released without any restrictions, into the public
+   domain (though if you wanted to keep the link to this
+   blog post, I'd appreciate it!)."
+
+   March 18th, 2026
+*/
+
+:root:not(.alx-embedded).alx-dark {
+  --p-live-ui-bg: hsl(0, 0%, 21%);
+  --p-live-control-bg: hsl(0, 0%, 16%);
+  --p-live-input-bg: hsl(0 0% 12%);
+  --p-live-text-primary: hsl(0, 0%, 71%);
+  --p-live-control-border: hsl(0, 0%, 7%);
+  --p-live-text-secondary: hsl(0, 0%, 41%);
+  --p-live-accent-primary: hsl(31 100% 67%);
+  --p-live-accent-secondary: hsl(185, 97%, 42%);
+  --p-live-accent-selection: hsl(194, 60%, 81%);
+  --p-live-selection-foreground: hsl(194, 30%, 21%);
+  --p-live-control-text--enabled: hsl(0, 0%, 7%);
+  --p-live-lcd-bg: hsl(0, 0%, 10%);
+}
+
+:root:not(.alx-embedded).alx-light {
+  --p-live-ui-bg: hsl(0, 0%, 65%);
+  --p-live-control-bg: hsl(0, 0%, 81%);
+  --p-live-input-bg: hsl(0, 0%, 87%);
+  --p-live-control-border: hsl(0, 0%, 31%);
+  --p-live-text-primary: hsl(0, 0%, 7%);
+  --p-live-text-secondary: hsl(0, 0%, 31%);
+  --p-live-accent-primary: hsl(43, 100%, 50%);
+  --p-live-accent-secondary: hsl(184, 100%, 50%);
+  --p-live-accent-selection: hsl(188, 100%, 90%);
+  --p-live-selection-foreground: hsl(188, 30%, 21%);
+  --p-live-control-text--enabled: hsl(0, 0%, 7%);
+  --p-live-lcd-bg: hsl(0, 0%, 14%);
+}
+
+:root {
+  /* Derived */
+  --c-bg--0000: oklch(from var(--p-live-ui-bg) calc(l * 0.5) calc(c * 0.5) h);
+  --c-bg--0100: oklch(from var(--p-live-ui-bg) calc(l * 0.6) calc(c * 0.6) h);
+  --c-bg--0200: oklch(from var(--p-live-ui-bg) calc(l * 0.7) calc(c * 0.7) h);
+  --c-bg--0300: oklch(from var(--p-live-ui-bg) calc(l * 0.8) calc(c * 0.8) h);
+  --c-bg--0400: oklch(from var(--p-live-ui-bg) calc(l * 0.9) calc(c * 0.9) h);
+  --c-bg--0500: oklch(from var(--p-live-ui-bg) l c h);
+  --c-bg--0600: oklch(from var(--p-live-ui-bg) calc(l * 1.1) c h);
+  --c-bg--0700: oklch(from var(--p-live-ui-bg) calc(l * 1.2) c h);
+  --c-bg--0800: oklch(from var(--p-live-ui-bg) calc(l * 1.3) c h);
+  --c-bg--0900: oklch(from var(--p-live-ui-bg) calc(l * 1.4) c h);
+  --c-bg--1000: oklch(from var(--p-live-ui-bg) calc(l * 1.5) c h);
+  /* Text */
+  --c-text-primary: oklch(from var(--p-live-text-primary) l c h);
+  --c-text-secondary: oklch(from var(--p-live-text-secondary) l c h);
+  /* Controls */
+  --c-control-bg--400: oklch(from var(--p-live-control-bg) calc(l * 0.9) c h);
+  --c-control-bg--500: oklch(from var(--p-live-control-bg) l c h);
+  --c-control-bg--600: oklch(from var(--p-live-control-bg) calc(l * 1.2) c h);
+  --c-control-border: oklch(from var(--p-live-control-border) l c h);
+  --c-control-foreground: oklch(from var(--p-live-text-primary) l c h);
+  --c-control-outline: var(--c-text-secondary);
+  --c-control-on-foreground: oklch(
+    from var(--p-live-control-text--enabled) l c h
+  );
+  /* Inputs (Text, Dropdown) */
+  --c-input-bg-400: oklch(from var(--p-live-input-bg) calc(l * 0.9) c h);
+  --c-input-bg-500: oklch(from var(--p-live-input-bg) l c h);
+  --c-input-bg-600: oklch(from var(--p-live-input-bg) calc(l * 1.2) c h);
+  /* Highlights */
+  --c-highlight--primary: oklch(from var(--p-live-accent-primary) l c h);
+  --c-highlight--secondary: oklch(from var(--p-live-accent-secondary) l c h);
+  /*Selection */
+  --c-selection-bg: oklch(from var(--p-live-accent-selection) l c h);
+  --c-selection-foreground: oklch(
+    from var(--p-live-selection-foreground) l c h
+  );
+  /* LCD */
+  --c-lcd-fg-0400: oklch(from var(--p-live-lcd-bg) calc(l * 0.8) c h);
+  --c-lcd-bg-0500: oklch(from var(--p-live-lcd-bg) l c h);
+  --c-lcd-bg-0600: oklch(from var(--p-live-lcd-bg) calc(l * 1.2) c h);
+  --c-lcd-fg-0500: oklch(from var(--p-live-lcd-bg) calc(l * 1.875) c h);
+  --c-lcd-fg-0600: oklch(from var(--p-live-lcd-bg) calc(l * 3) c h);
+  /* Links */
+  --c-link: var(--p-live-text-primary);
+}
+
+/* System */
+/* System Prefix */
+/* Units */
+/* System Unit - Var */
+/* Mixins */
+html {
+  background-color: var(--c-bg--0500);
+  color: var(--c-text-primary);
+  font-family: "AbletonSansSmall", sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--c-selection-bg) 99%, transparent);
+  color: var(--c-selection-foreground);
+}
+
+body {
+  font-size: 1rem;
+  padding: 1.5em;
+  line-height: 1.5;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-text-primary) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--c-text-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--c-highlight--primary);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.alx-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  cursor: pointer;
+}
+
+.alx-invisible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  appearance: none;
+}
+
+.alx-input:not([type="range"]) {
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: var(--control-bg, var(--c-control-bg--500));
+  color: var(--control-fg, var(--c-text-primary));
+  border: 1px solid var(--control-border, var(--c-control-border));
+  min-width: 1px;
+  background-color: var(--input-bg, var(--c-input-bg-500));
+}
+.alx-input:not([type="range"]):focus {
+  border: 1px solid var(--control-border, var(--c-control-border));
+  outline: 2px solid var(--control-outline, var(--c-control-outline));
+}
+.alx-input:not([type="range"]):disabled {
+  background-color: var(--control-bg-dim, var(--c-control-bg--400));
+  color: var(--control-fg-dim, var(--c-text-secondary));
+  border-color: var(--control-border-disabled, var(--c-control-border));
+}
+.alx-input:not([type="range"]):disabled::placeholder {
+  color: var(--control-outline, var(--c-text-secondary));
+}
+.alx-input:not([type="range"]):disabled {
+  cursor: not-allowed;
+}
+.alx-input:not([type="range"]):disabled {
+  background-color: transparent;
+}
+.alx-input:not([type="range"]) {
+  height: 20px;
+  padding: 0 0.33em;
+  outline-offset: 0px;
+}
+.alx-input:not([type="range"])::placeholder {
+  color: var(--c-text-secondary);
+}
+
+.alx-input[type="checkbox"],
+.alx-input[type="radio"] {
+  flex: none !important;
+  appearance: none;
+}
+.alx-input[type="checkbox"]:focus,
+.alx-input[type="radio"]:focus {
+  border: 1px solid var(--control-border, var(--c-control-border));
+  outline: 2px solid var(--control-outline, var(--c-control-outline));
+}
+.alx-input[type="checkbox"],
+.alx-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  background-color: var(--control-bg, var(--c-control-bg--500));
+  border: 1px solid var(--control-border, var(--c-control-border));
+  vertical-align: middle;
+  cursor: pointer;
+}
+.alx-input[type="checkbox"]:checked,
+.alx-input[type="radio"]:checked {
+  background-color: var(--c-highlight--primary);
+}
+.alx-input[type="checkbox"].alx-secondary:checked,
+.alx-input[type="radio"].alx-secondary:checked {
+  background-color: var(--c-highlight--secondary);
+}
+.alx-input[type="checkbox"]:checked:disabled,
+.alx-input[type="radio"]:checked:disabled {
+  background-color: var(--control-bg-dim, transparent);
+  border-color: var(--control-outline, var(--c-control-border));
+}
+
+.alx-input[type="checkbox"] {
+  border-radius: 2px;
+}
+.alx-input[type="checkbox"]:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 11'%3E%3Cpath d='M2 6l2 2 4-4' stroke='%23121212' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: center;
+  background-attachment: local;
+  background-repeat: no-repeat;
+}
+
+.alx-input[type="radio"] {
+  border-radius: 50%;
+  outline-offset: 1px;
+  outline-width: 1px !important;
+}
+.alx-input[type="radio"]:checked {
+  background-color: var(--control-bg, var(--c-control-bg--500));
+  background-image: radial-gradient(
+    circle,
+    var(--c-highlight--primary) 40%,
+    transparent 40%
+  );
+  border-color: var(--c-highlight--primary);
+}
+.alx-input[type="radio"].alx-secondary:checked {
+  background-color: var(--control-bg, var(--c-control-bg--500));
+  background-image: radial-gradient(
+    circle,
+    var(--c-highlight--secondary) 40%,
+    transparent 40%
+  );
+  border-color: var(--c-highlight--secondary);
+}
+.alx-input[type="radio"]:checked:disabled {
+  background-color: var(--control-bg-dim, transparent);
+  border-color: var(--control-outline, var(--c-control-border));
+  background-image: radial-gradient(
+    circle,
+    var(--control-fg-dim, var(--c-text-secondary)) 40%,
+    transparent 40%
+  );
+  border-color: var(--c-control-outline, var(--c-control-border));
+}
+
+.alx-button {
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: var(--control-bg, var(--c-control-bg--500));
+  color: var(--control-fg, var(--c-text-primary));
+  border: 1px solid var(--control-border, var(--c-control-border));
+  min-width: 1px;
+}
+.alx-button:focus {
+  border: 1px solid var(--control-border, var(--c-control-border));
+  outline: 2px solid var(--control-outline, var(--c-control-outline));
+}
+.alx-button:disabled {
+  background-color: var(--control-bg-dim, var(--c-control-bg--400));
+  color: var(--control-fg-dim, var(--c-text-secondary));
+  border-color: var(--control-border-disabled, var(--c-control-border));
+}
+.alx-button:disabled::placeholder {
+  color: var(--control-outline, var(--c-text-secondary));
+}
+.alx-button:disabled {
+  cursor: not-allowed;
+}
+.alx-button {
+  height: 20px;
+  padding: 0 0.5em;
+  white-space: nowrap;
+  border-radius: 1em;
+  padding: 0 1em;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+.alx-button:hover {
+  background-color: var(--control-bg-dim, var(--c-control-bg--400));
+}
+.alx-button:active {
+  color: var(--c-control-on-foreground);
+  background-color: var(--c-highlight--primary);
+}
+.alx-button.alx-secondary:active {
+  background-color: var(--c-highlight--secondary);
+}
+
+.alx-toggle {
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: var(--control-bg, var(--c-control-bg--500));
+  color: var(--control-fg, var(--c-text-primary));
+  border: 1px solid var(--control-border, var(--c-control-border));
+  min-width: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 0 0.5em;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.alx-toggle:hover {
+  background-color: var(--control-bg-dim, var(--c-control-bg--400));
+}
+.alx-toggle:has(:checked) {
+  color: var(--c-control-on-foreground);
+  background-color: var(--c-highlight--primary);
+}
+.alx-toggle.alx-secondary:has(:checked) {
+  background-color: var(--c-highlight--secondary);
+}
+.alx-toggle:has(:focus-visible) {
+  outline: 2px solid var(--control-outline, var(--c-control-outline));
+}
+.alx-toggle:has(:disabled) {
+  cursor: not-allowed;
+  background-color: var(--control-bg-dim, var(--c-control-bg--400));
+  color: var(--c-text-secondary);
+}
+.alx-toggle:has(:disabled:checked) {
+  background-color: var(--control-bg-dim, var(--c-control-bg--400));
+  color: var(--c-text-secondary);
+}
+
+.alx-toggle-group {
+  display: inline-flex;
+}
+.alx-toggle-group > .alx-toggle + .alx-toggle {
+  border-left: none;
+}
+
+.alx-select {
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: var(--control-bg, var(--c-control-bg--500));
+  color: var(--control-fg, var(--c-text-primary));
+  border: 1px solid var(--control-border, var(--c-control-border));
+  min-width: 1px;
+  background-color: var(--input-bg, var(--c-input-bg-500));
+}
+.alx-select:focus {
+  border: 1px solid var(--control-border, var(--c-control-border));
+  outline: 2px solid var(--control-outline, var(--c-control-outline));
+}
+.alx-select:disabled {
+  background-color: var(--control-bg-dim, var(--c-control-bg--400));
+  color: var(--control-fg-dim, var(--c-text-secondary));
+  border-color: var(--control-border-disabled, var(--c-control-border));
+}
+.alx-select:disabled::placeholder {
+  color: var(--control-outline, var(--c-text-secondary));
+}
+.alx-select:disabled {
+  cursor: not-allowed;
+}
+.alx-select:disabled {
+  background-color: transparent;
+}
+.alx-select {
+  height: 20px;
+  padding: 0 0.33em;
+  padding-right: 1.2em;
+  outline-offset: 0px;
+  border-radius: 0;
+  appearance: none;
+}
+.alx-select::placeholder {
+  color: var(--c-text-secondary);
+}
+.alx-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 5'%3E%3Cpath d='M0 0l5 5 5-5' stroke='%23555555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-position: right 0.25em center;
+  background-repeat: no-repeat;
+  background-size: 8px;
+}
+
+.alx-textarea {
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: var(--control-bg, var(--c-control-bg--500));
+  color: var(--control-fg, var(--c-text-primary));
+  border: 1px solid var(--control-border, var(--c-control-border));
+  min-width: 1px;
+  background-color: var(--input-bg, var(--c-input-bg-500));
+}
+.alx-textarea:focus {
+  border: 1px solid var(--control-border, var(--c-control-border));
+  outline: 2px solid var(--control-outline, var(--c-control-outline));
+}
+.alx-textarea:disabled {
+  background-color: var(--control-bg-dim, var(--c-control-bg--400));
+  color: var(--control-fg-dim, var(--c-text-secondary));
+  border-color: var(--control-border-disabled, var(--c-control-border));
+}
+.alx-textarea:disabled::placeholder {
+  color: var(--control-outline, var(--c-text-secondary));
+}
+.alx-textarea:disabled {
+  cursor: not-allowed;
+}
+.alx-textarea:disabled {
+  background-color: transparent;
+}
+.alx-textarea {
+  padding: 0 0.33em;
+  outline-offset: 0px;
+}
+
+.alx-input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 17px;
+  background: transparent;
+  cursor: pointer;
+}
+.alx-input[type="range"]:focus {
+  outline: none;
+}
+.alx-input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 21px;
+  height: 9px;
+  background-color: var(--c-control-bg--500);
+  border: 1px solid var(--c-control-border);
+  border-radius: 4.5px;
+  margin-top: -3px;
+}
+.alx-input[type="range"]::-webkit-slider-thumb:hover {
+  background-color: var(--c-control-bg--400);
+}
+.alx-input[type="range"]::-webkit-slider-thumb:active {
+  background-color: var(--c-highlight--primary);
+}
+.alx-input[type="range"].alx-secondary::-webkit-slider-thumb:active {
+  background-color: var(--c-highlight--secondary);
+}
+.alx-input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--c-control-outline);
+  outline-offset: 1px;
+}
+.alx-input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  background-color: var(--c-bg--0200);
+  border-radius: 2px;
+  border: none;
+}
+.alx-input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 21px;
+  height: 9px;
+  background-color: var(--c-control-bg--500);
+  border: 1px solid var(--c-control-border);
+  border-radius: 4.5px;
+}
+.alx-input[type="range"]::-moz-range-thumb:hover {
+  background-color: var(--c-control-bg--400);
+}
+.alx-input[type="range"]::-moz-range-thumb:active {
+  background-color: var(--c-highlight--primary);
+}
+.alx-input[type="range"].alx-secondary::-moz-range-thumb:active {
+  background-color: var(--c-highlight--secondary);
+}
+.alx-input[type="range"]:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--c-control-outline);
+  outline-offset: 1px;
+}
+.alx-input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 4px;
+  background-color: var(--c-bg--0200);
+  border-radius: 2px;
+  border: none;
+}
+
+.alx-progress {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 9px;
+  border: 1px solid var(--control-border, var(--c-control-border));
+  border-radius: 3px;
+  background-color: var(--control-bg, var(--c-control-bg--500));
+  overflow: hidden;
+}
+.alx-progress::-webkit-progress-bar {
+  background-color: var(--control-bg, var(--c-control-bg--500));
+}
+.alx-progress::-webkit-progress-value {
+  background-color: var(--c-highlight--primary);
+}
+.alx-progress::-moz-progress-bar {
+  background-color: var(--c-highlight--primary);
+}
+.alx-progress.alx-secondary::-webkit-progress-value {
+  background-color: var(--c-highlight--secondary);
+}
+
+.alx-details {
+  border: 1px solid var(--c-bg--0200);
+  border-radius: 2px;
+  padding: 1em;
+}
+.alx-details > summary {
+  cursor: pointer;
+  user-select: none;
+  padding: 0 0.5em;
+}
+.alx-details > summary:hover {
+  color: var(--c-highlight--primary);
+}
+.alx-details > summary:focus-visible {
+  outline: 2px solid var(--c-control-outline);
+  outline-offset: 2px;
+}
+.alx-details > summary::marker {
+  display: none;
+  margin-right: 0.5em;
+}
+.alx-details[open] > summary {
+  margin-bottom: 0.5em;
+}
+
+.alx-hr {
+  border: none;
+  border-top: 1px solid var(--c-bg--0200);
+  margin: 0.5em 0;
+}
+
+.alx-link {
+  color: var(--c-link, --c-lcd-fg-0600);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.alx-link:hover {
+  color: var(--c-highlight--secondary);
+}
+.alx-link:focus-visible {
+  outline: 2px solid var(--c-control-outline);
+  outline-offset: 2px;
+}
+
+.alx-fieldset {
+  border: 1px solid var(--control-border, var(--c-bg--0200));
+  padding: 0.33em 1em 1em 1em;
+}
+.alx-fieldset legend {
+  padding: 0 0.25em;
+}
+
+.alx-group {
+  display: flex;
+}
+.alx-group.alx-horizontal {
+  flex-direction: row;
+  gap: 0.5em;
+}
+.alx-group.alx-horizontal > * {
+  flex: 1 1 0;
+}
+.alx-group.alx-horizontal > *.alx-no-flex {
+  flex: none;
+}
+.alx-group.alx-vertical {
+  flex-direction: column;
+  gap: 0.5em;
+}
+.alx-group.alx-vertical > .alx-no-flex {
+  flex: none;
+}
+.alx-group.alx-and-margin {
+  margin-bottom: 1em;
+}
+.alx-group.alx-big-gap {
+  gap: 1.5em;
+}
+
+.alx-input-group {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+  flex-direction: row;
+}
+
+.alx-lcd {
+  --control-bg: var(--c-lcd-bg-0500);
+  --control-bg-dim: var(--c-lcd-fg-0400);
+  --control-fg: var(--c-lcd-fg-0600);
+  --control-fg-dim: var(--c-lcd-fg-0500);
+  --control-border: var(--c-lcd-fg-0600);
+  --control-border-disabled: var(--c-lcd-fg-0500);
+  --control-outline: var(--c-lcd-fg-0500);
+  --input-bg: var(--c-lcd-bg-0500);
+  --input-bg-dim: var(--c-lcd-fg-0400);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  background-color: var(--c-lcd-bg-0500);
+  padding: 1.5em;
+  color: var(--control-fg);
+  border-radius: 4px;
+}
+.alx-lcd .alx-hr {
+  border: none;
+  border-top: 1px solid var(--c-lcd-fg-0500);
+}
+.alx-lcd .alx-button:disabled {
+  background-color: var(--c-lcd-bg-0500);
+}
+.alx-lcd .alx-button.alx-primary {
+  color: var(--c-highlight--primary);
+  border-color: var(--c-highlight--primary);
+}
+.alx-lcd .alx-button.alx-primary:active {
+  color: var(--c-lcd-bg-0500);
+}
+.alx-lcd .alx-button.alx-primary:focus-visible {
+  outline-color: var(--c-highlight--primary);
+}
+.alx-lcd .alx-button:disabled:active {
+  color: var(--c-lcd-fg-0500);
+}
+.alx-lcd .alx-button:not(:disabled) {
+  color: var(--c-highlight--primary);
+  border-color: var(--c-highlight--primary);
+}
+.alx-lcd .alx-button:not(:disabled):active {
+  outline-width: 1px;
+  color: var(--c-lcd-bg-0500);
+}
+.alx-lcd .alx-button:not(:disabled):focus-visible {
+  outline-width: 1px;
+  outline-color: var(--c-highlight--primary);
+}
+.alx-lcd .alx-button.alx-secondary:not(:disabled) {
+  color: var(--c-highlight--secondary);
+  border-color: var(--c-highlight--secondary);
+}
+.alx-lcd .alx-button.alx-secondary:not(:disabled):active {
+  outline-width: 1px;
+  color: var(--c-lcd-bg-0500);
+}
+.alx-lcd .alx-button.alx-secondary:not(:disabled):focus-visible {
+  outline-width: 1px;
+  outline-color: var(--c-highlight--secondary);
+}
+.alx-lcd .alx-input:not([type="range"]) {
+  color: var(--control-fg);
+}
+.alx-lcd .alx-input:not([type="range"])::placeholder {
+  color: var(--control-fg-dim);
+}
+.alx-lcd .alx-input[type="range"]::-webkit-slider-thumb {
+  margin-top: -4px;
+  background-color: var(--control-fg);
+  border-color: var(--c-lcd-bg-0500);
+}
+.alx-lcd .alx-input[type="range"]::-webkit-slider-runnable-track {
+  background-color: var(--control-fg-dim);
+  height: 1px;
+}
+.alx-lcd .alx-input[type="range"]::-moz-range-thumb {
+  background-color: var(--control-fg);
+  border-color: var(--c-lcd-bg-0500);
+}
+.alx-lcd .alx-input[type="range"]::-moz-range-track {
+  background-color: var(--control-fg-dim);
+  height: 1px;
+}
+.alx-lcd .alx-input[type="range"].alx-primary::-webkit-slider-thumb {
+  background-color: var(--c-highlight--primary);
+}
+.alx-lcd .alx-input[type="range"].alx-primary::-moz-range-thumb {
+  background-color: var(--c-highlight--primary);
+}
+.alx-lcd .alx-input[type="range"].alx-secondary::-webkit-slider-thumb {
+  background-color: var(--c-highlight--secondary);
+}
+.alx-lcd .alx-input[type="range"].alx-secondary::-moz-range-thumb {
+  background-color: var(--c-highlight--secondary);
+}
+.alx-lcd .alx-progress {
+  padding: 1px;
+}
+.alx-lcd .alx-select.alx-primary {
+  border-color: var(--c-highlight--primary);
+  color: var(--c-highlight--primary);
+}
+.alx-lcd .alx-select.alx-primary:focus-visible {
+  outline-color: var(--c-highlight--primary);
+}
+.alx-lcd .alx-select.alx-secondary {
+  border-color: var(--c-highlight--secondary);
+  color: var(--c-highlight--secondary);
+}
+.alx-lcd .alx-select.alx-secondary:focus-visible {
+  outline-color: var(--c-highlight--secondary);
+}
+.alx-lcd .alx-input.alx-input:not([type="range"]).alx-primary {
+  border-color: var(--c-highlight--primary);
+  color: var(--c-highlight--primary);
+}
+.alx-lcd .alx-input.alx-input:not([type="range"]).alx-primary::placeholder {
+  color: color-mix(var(--c-highlight--primary), var(--c-lcd-bg-0500), 50%);
+}
+.alx-lcd .alx-input.alx-input:not([type="range"]).alx-primary:focus-visible {
+  outline-color: var(--c-highlight--primary);
+}
+.alx-lcd .alx-input:not([type="range"]).alx-secondary {
+  border-color: var(--c-highlight--secondary);
+  color: var(--c-highlight--secondary);
+}
+.alx-lcd .alx-input:not([type="range"]).alx-secondary::placeholder {
+  color: color-mix(var(--c-highlight--secondary), var(--c-lcd-bg-0500), 50%);
+}
+.alx-lcd .alx-input:not([type="range"]).alx-secondary:focus-visible {
+  outline-color: var(--c-highlight--secondary);
+}
+
+.alx-panel {
+  background-color: var(--c-bg--0400);
+  border-radius: 4px;
+  padding: 1.5em;
+}
+.alx-panel.alx-p-border {
+  border: 1px solid var(--c-bg--0200);
+  background-color: transparent;
+}
+
+/*# sourceMappingURL=main.css.map */
