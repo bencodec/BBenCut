@@ -1,4 +1,4 @@
-<img width="1024" height="1126" alt="image" src="https://github.com/user-attachments/assets/35f84a66-0753-4ea5-95aa-5996510e1267" />
+<img width="806" height="908" alt="image" src="https://github.com/user-attachments/assets/91cac3e0-e72a-4c48-9a77-de0cc41f246d" />
 
 # BBenCut
 
