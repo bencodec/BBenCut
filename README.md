@@ -1,8 +1,8 @@
 # BBenCut
 
-An Ableton Live extension that applies [BBCut](https://composerprogrammer.com/research/bbcut2.pdf) breakbeat cutting algorithms to AudioClips in the Arrangement View.
+An Ableton Live extension that applies [BBCut](https://composerprogrammer.com/bbcut2.html) breakbeat cutting algorithms to AudioClips in the Arrangement View.
 
-BBCut is a SuperCollider library by Nick Collins that algorithmically rearranges audio loops using phrase-based cut procedures. This extension ports those algorithms to TypeScript and integrates them directly into Live as a context menu action.
+BBCut is a SuperCollider library by [Nick Collins](https://composerprogrammer.com) that algorithmically rearranges audio loops using phrase-based cut procedures. This extension ports those algorithms to TypeScript and integrates them directly into Live as a context menu action.
 
 <img width="403" height="454" alt="image" src="https://github.com/user-attachments/assets/91cac3e0-e72a-4c48-9a77-de0cc41f246d" />
 
