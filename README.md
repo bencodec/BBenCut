@@ -6,9 +6,9 @@ BBCut is a SuperCollider library by [Nick Collins](https://composerprogrammer.co
 
 <img width="403" height="454" alt="image" src="https://github.com/user-attachments/assets/91cac3e0-e72a-4c48-9a77-de0cc41f246d" />
 
-
+If you just want to download the Extension, it's here: **https://github.com/bencodec/BBenCut/releases/download/1.0.0/BBenCut-1.0.0.ablx
+**
 ## Usage
-
 1. Right-click any AudioClip in the Arrangement View
 2. Select **BBenCut → Rearrange**
 3. Configure the total length, loop length, cut procedure and parameters
