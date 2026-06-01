@@ -1,3 +1,5 @@
+<img width="1024" height="1126" alt="image" src="https://github.com/user-attachments/assets/35f84a66-0753-4ea5-95aa-5996510e1267" />
+
 # BBenCut
 
 An Ableton Live extension that applies [BBCut](https://composerprogrammer.com/research/bbcut2.pdf) breakbeat cutting algorithms to AudioClips in the Arrangement View.
