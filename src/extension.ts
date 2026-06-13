@@ -1,10 +1,12 @@
-import type { ArrangementSelection } from "@ableton-extensions/sdk";
+import type { ArrangementSelection, NoteDescription } from "@ableton-extensions/sdk";
 import {
   initialize,
   type ActivationContext,
   DataModelObject,
   AudioClip,
   AudioTrack,
+  MidiClip,
+  MidiTrack,
 } from "@ableton-extensions/sdk";
 import { generateCutSequence, mapToSliceDefinitions } from "./slicer.js";
 import { renderAllRollGroups, ProtectedContentError } from "./audio.js";
@@ -40,6 +42,32 @@ interface ModalResult {
     procType: string;
     params: Record<string, number>;
   };
+}
+
+function copyNotesForSlice(
+  notes: NoteDescription[],
+  sourceStart: number,
+  sourceEnd: number,
+): NoteDescription[] {
+  const copied: NoteDescription[] = [];
+
+  for (const note of notes) {
+    const noteStart = note.startTime;
+    const noteEnd = note.startTime + note.duration;
+    const start = Math.max(noteStart, sourceStart);
+    const end = Math.min(noteEnd, sourceEnd);
+
+    if (end <= start) continue;
+
+    copied.push({
+      ...note,
+      startTime: start - sourceStart,
+      duration: end - start,
+      selected: false,
+    });
+  }
+
+  return copied;
 }
 
 function createProc(
@@ -128,15 +156,24 @@ export function activate(activation: ActivationContext) {
     "bbencut.open",
     (arg: unknown) =>
       void (async (selection: ArrangementSelection) => {
-        const tracks = selection.selected_lanes
+        const selectedTracks = selection.selected_lanes
           .map((handle) => context.getObjectFromHandle(handle, DataModelObject))
-          .filter((obj): obj is AudioTrack<"1.0.0"> => obj instanceof AudioTrack);
+          .filter(
+            (obj): obj is AudioTrack<"1.0.0"> | MidiTrack<"1.0.0"> =>
+              obj instanceof AudioTrack || obj instanceof MidiTrack,
+          );
+        const audioTracks = selectedTracks.filter(
+          (obj): obj is AudioTrack<"1.0.0"> => obj instanceof AudioTrack,
+        );
+        const midiTracks = selectedTracks.filter(
+          (obj): obj is MidiTrack<"1.0.0"> => obj instanceof MidiTrack,
+        );
 
-        if (tracks.length !== 1) {
-          console.log("[bbencut] Select exactly one arrangement audio track.");
+        if (audioTracks.length + midiTracks.length !== 1) {
+          console.log("[bbencut] Select exactly one arrangement audio or MIDI track.");
           return;
         }
-        const track = tracks[0]!;
+        const track = audioTracks[0] ?? midiTracks[0]!;
 
         const selectionStart = selection.time_selection_start;
         const selectionEnd = selection.time_selection_end;
@@ -148,9 +185,12 @@ export function activate(activation: ActivationContext) {
         const clip = [...track.arrangementClips].find((c) =>
           c.startTime <= selectionStart && c.endTime >= selectionStart + 0.0001,
         );
-        if (!(clip instanceof AudioClip)) {
+        if (
+          (track instanceof AudioTrack && !(clip instanceof AudioClip)) ||
+          (track instanceof MidiTrack && !(clip instanceof MidiClip))
+        ) {
           console.log(
-            "[bbencut] No arrangement audio clip found at the selection start.",
+            "[bbencut] No arrangement audio or MIDI clip found at the selection start.",
           );
           return;
         }
@@ -218,6 +258,77 @@ export function activate(activation: ActivationContext) {
               finalTotalBeats,
               finalLoopBeats,
             );
+
+            if (track instanceof MidiTrack && clip instanceof MidiClip) {
+              const { slices } = mapToSliceDefinitions(
+                blocks,
+                clipStartTime,
+                clipLoopStart,
+                finalLoopBeats,
+                "",
+                0,
+              );
+              const validSlices = slices.filter((s) => {
+                if (s.duration < 0.01) return false;
+                if (
+                  s.loopSettings.endMarker <=
+                  s.loopSettings.startMarker + 0.001
+                )
+                  return false;
+                return true;
+              });
+
+              if (validSlices.length === 0) {
+                console.log("[bbencut] No valid MIDI slices generated.");
+                return;
+              }
+
+              await update(`Creating ${validSlices.length} MIDI clips...`, 60);
+              console.log(
+                `[bbencut] Rearranging "${clip.name}" with ${cfg.procType} into ${validSlices.length} MIDI clips.`,
+              );
+
+              const sourceNotes = clip.notes;
+              await track.clearClipsInRange(
+                clipStartTime,
+                clipStartTime + finalTotalBeats,
+              );
+
+              const createdClips = await context.withinTransaction(() =>
+                Promise.all(
+                  validSlices.map((slice, i) =>
+                    track
+                      .createMidiClip(slice.arrangementStartTime, slice.duration)
+                      .then((createdClip) => {
+                        createdClip.notes = copyNotesForSlice(
+                          sourceNotes,
+                          slice.loopSettings.startMarker,
+                          slice.loopSettings.endMarker,
+                        );
+                        return createdClip;
+                      })
+                      .catch((e: unknown) => {
+                        console.error(
+                          `[bbencut] MIDI clip #${i} failed: pos=${slice.arrangementStartTime.toFixed(3)} dur=${slice.duration.toFixed(3)} source=${slice.loopSettings.startMarker.toFixed(3)}-${slice.loopSettings.endMarker.toFixed(3)}`,
+                          e,
+                        );
+                        return null;
+                      }),
+                  ),
+                ),
+              );
+              context.withinTransaction(() => {
+                createdClips.forEach((clip, i) => {
+                  if (clip) clip.color = CLIP_COLORS[i % CLIP_COLORS.length]!;
+                });
+              });
+              await update("Done", 100);
+              return;
+            }
+
+            if (!(track instanceof AudioTrack) || !(clip instanceof AudioClip)) {
+              return;
+            }
 
             const { slices, rollGroups } = mapToSliceDefinitions(
               blocks,
@@ -337,6 +448,11 @@ export function activate(activation: ActivationContext) {
 
   context.ui.registerContextMenuAction(
     "AudioTrack.ArrangementSelection",
+    "Rearrange",
+    "bbencut.open",
+  );
+  context.ui.registerContextMenuAction(
+    "MidiTrack.ArrangementSelection",
     "Rearrange",
     "bbencut.open",
   );

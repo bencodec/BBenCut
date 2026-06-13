@@ -107,6 +107,7 @@ export function mapToSliceDefinitions(
   clipLoopStart: number,
   loopLengthBeats: number,
   filePath: string,
+  minClipBeats = MIN_CLIP_BEATS,
 ): SlicerResult {
   const items: SliceOrRoll[] = [];
   const rollGroups: RollGroup[] = [];
@@ -117,7 +118,7 @@ export function mapToSliceDefinitions(
 
   function flushSmall() {
     if (!pendingSmall || pendingSmall.cuts.length === 0) return;
-    if (pendingSmall.totalDur < MIN_CLIP_BEATS) {
+    if (pendingSmall.totalDur < minClipBeats) {
       // Even the group is too short — extend previous clip
       pendingSmall = null;
       return;
@@ -191,9 +192,9 @@ export function mapToSliceDefinitions(
           const clamped = clampOffset(silenceOffset, ioi, loopLengthBeats);
           const fillDur = Math.min(ioi, loopLengthBeats - clamped);
 
-          if (ioi >= MIN_CLIP_BEATS && fillDur >= MIN_CLIP_BEATS) {
+          if (ioi >= minClipBeats && fillDur >= minClipBeats) {
             addClip(ioi, clipLoopStart + clamped, clipLoopStart + clamped + fillDur);
-          } else if (ioi >= MIN_CLIP_BEATS) {
+          } else if (ioi >= minClipBeats) {
             // Offset clamping made it too short — just play from 0
             addClip(ioi, clipLoopStart, clipLoopStart + ioi);
           } else {
@@ -215,7 +216,7 @@ export function mapToSliceDefinitions(
         loopOffset = clampOffset(loopOffset, duration, loopLengthBeats);
         duration = Math.min(duration, loopLengthBeats - loopOffset);
 
-        if (ioi < MIN_CLIP_BEATS) {
+        if (ioi < minClipBeats) {
           addSmallCut(loopOffset, duration);
         } else {
           addClip(ioi, clipLoopStart + loopOffset, clipLoopStart + loopOffset + duration);
@@ -237,13 +238,13 @@ export function mapToSliceDefinitions(
         const clamped = clampOffset(loopOffset, originalDur, loopLengthBeats);
         let cutDuration = Math.min(originalDur, loopLengthBeats - clamped);
 
-        if (originalDur < MIN_CLIP_BEATS) {
+        if (originalDur < minClipBeats) {
           addSmallCut(clamped, cutDuration);
           arrangementPos += originalDur;
           continue;
         }
 
-        if (cutDuration < MIN_CLIP_BEATS) {
+        if (cutDuration < minClipBeats) {
           addSmallCut(clamped, cutDuration);
           arrangementPos += originalDur;
           continue;
